@@ -1,16 +1,16 @@
 import os
 import uuid
+from typing import Annotated
 
 from fastapi import FastAPI, Request
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware  # Add this import
+from fastapi import Depends, FastAPI
 
-from app.pdf_creater import generate_pdf_report
-from app.model import LDPRReport
+from app.dependencies import get_telegram_service
+from app.services.telegram import TelegramService
 
 
 app = FastAPI()
-app.mount("/media", StaticFiles(directory="media"), name="media")
 
 
 app.add_middleware(
@@ -27,6 +27,10 @@ async def ping():
     return {"message": "Pong"}
 
 
-@app.post("/")
-async def create_pdf(report: LDPRReport, request: Request):
+@app.get("/")
+async def create_pdf(request: Request):
     return {"status": "Success", "message": f"Hello"}
+
+@app.get("/notify")
+async def notify(telegram_service: Annotated[TelegramService, Depends(get_telegram_service)]):
+    await telegram_service.send_hello()
