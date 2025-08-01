@@ -202,5 +202,9 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-src/media/*
-src/tmp/*
+backend/media/*
+backend/tmp/*
+backend/.env
+
+frontend.env
+backend/db.sqlite3
