@@ -186,7 +186,7 @@ const SocialSpherePage: React.FC = () => {
       
         <div className="mt-16 max-w-4xl mx-auto text-center bg-sky-500 text-white p-12 rounded-2xl">
             <p className="text-3xl font-bold tracking-tight">
-             Помните: государство рядом с вами на каждом шагу вашей семейной жизни!
+             Помните: государство рядом с вами на каждом этапе вашей семейной жизни!
             </p>
         </div>
       </div>

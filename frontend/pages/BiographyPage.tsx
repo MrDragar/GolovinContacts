@@ -6,7 +6,7 @@ import MobileMenu from '../components/MobileMenu';
 const bioSections = [
     {
         title: '',
-        content: <p>Родился 5 января 1989 года в семье простых рабочих</p>
+        content: <p>Родился 5 января 1989 года в семье рабочих</p>
     },
     {
         title: 'Образование',
