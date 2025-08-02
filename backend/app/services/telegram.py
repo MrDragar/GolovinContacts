@@ -76,7 +76,7 @@ class TelegramService:
         total_parts = len(text_parts)
         for i, part in enumerate(text_parts, 1):
             # Добавляем нумерацию страниц в конец каждой части
-            part_with_pagination = f"{part}\n\n— Страница {i}/{total_parts}"
+            part_with_pagination = f"{part}\n\n— Страница {i}/{total_parts}" if total_parts > 1 else part
             await self._bot.send_message(
                 chat_id=self._chat_id,
                 text=part_with_pagination,
