@@ -29,10 +29,12 @@ const Accordion: React.FC<{ title: string; children: React.ReactNode }> = ({ tit
 const ContactPage: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'submitted' | 'error'>('idle');
   const [isConsentAgreed, setIsConsentAgreed] = useState(false);
-  
+  const [message, setMessage] = useState('');
+  const maxLength = 20000;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isConsentAgreed) return;
+    if (!isConsentAgreed || message.length > maxLength) return;
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -59,6 +61,7 @@ const ContactPage: React.FC = () => {
 
       setStatus('submitted');
       form.reset();
+      setMessage('');
       setIsConsentAgreed(false);
       setTimeout(() => setStatus('idle'), 5000);
     } catch (error) {
@@ -68,6 +71,10 @@ const ContactPage: React.FC = () => {
     }
   };
 
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value);
+  };
+
   return (
     <Layout title="Подать обращение">
       <div className="max-w-4xl mx-auto">
@@ -75,7 +82,7 @@ const ContactPage: React.FC = () => {
         <div>
           <div className="text-center">
             <h2 className="text-4xl font-bold tracking-tighter text-gray-100 mb-2">Написать обращение</h2>
-            <p className="text-gray-300 mb-10 text-lg max-w-2xl mx-auto">Ваше мнение важно для меня. Заполните форму, я и моя  команда обязательно свяжемся с вами</p>
+            <p className="text-gray-300 mb-10 text-lg max-w-2xl mx-auto">Ваше мнение важно для меня. Заполните форму, я и моя команда обязательно свяжемся с вами</p>
           </div>
           
           <div className="bg-white/5 border border-white/10 rounded-xl p-8 sm:p-10">
@@ -98,8 +105,22 @@ const ContactPage: React.FC = () => {
                   <label htmlFor="message" className="text-base font-medium text-gray-200">Ваше обращение</label>
                   <div className="relative">
                     <MessageSquareIcon className="absolute left-3.5 top-4 h-5 w-5 text-gray-500" />
-                    <textarea name="message" id="message" rows={6} required className="block w-full rounded-lg border border-white/20 bg-transparent pl-11 pr-4 py-3 text-lg text-white placeholder-gray-400 transition-colors focus:border-sky-400 focus:ring-2 focus:ring-sky-400/50" placeholder="Опишите ваш вопрос или предложение..."></textarea>
+                    <textarea 
+                      name="message" 
+                      id="message" 
+                      rows={6} 
+                      required 
+                      value={message}
+                      onChange={handleMessageChange}
+                      maxLength={maxLength}
+                      className="block w-full rounded-lg border border-white/20 bg-transparent pl-11 pr-4 py-3 text-lg text-white placeholder-gray-400 transition-colors focus:border-sky-400 focus:ring-2 focus:ring-sky-400/50" 
+                      placeholder="Опишите ваш вопрос или предложение..."
+                    ></textarea>
                   </div>
+                  {message.length > maxLength && (
+                    <p className="text-red-400 text-sm">Сообщение превышает максимальную длину в {maxLength} символов</p>
+                  )}
+                  <p className="text-gray-400 text-sm">Символов: {message.length}/{maxLength}</p>
                 </div>
                 
                 <div className="space-y-4 pt-2">
@@ -121,7 +142,11 @@ const ContactPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <button type="submit" disabled={status === 'submitting' || !isConsentAgreed} className="w-full flex justify-center py-4 px-4 border border-transparent rounded-lg text-lg font-semibold text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-400 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300">
+                  <button 
+                    type="submit" 
+                    disabled={status === 'submitting' || !isConsentAgreed || message.length > maxLength} 
+                    className="w-full flex justify-center py-4 px-4 border border-transparent rounded-lg text-lg font-semibold text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-400 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300"
+                  >
                     {status === 'submitting' ? 'Отправка...' : 'Отправить обращение'}
                   </button>
                 </div>
