@@ -30,11 +30,14 @@ const ContactPage: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'submitted' | 'error'>('idle');
   const [isConsentAgreed, setIsConsentAgreed] = useState(false);
   const [message, setMessage] = useState('');
-  const maxLength = 20000;
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const maxLengthMessage = 20000;
+  const maxLengthNameEmail = 100;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isConsentAgreed || message.length > maxLength) return;
+    if (!isConsentAgreed || message.length > maxLengthMessage || name.length > maxLengthNameEmail || email.length > maxLengthNameEmail) return;
 
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -61,6 +64,8 @@ const ContactPage: React.FC = () => {
 
       setStatus('submitted');
       form.reset();
+      setName('');
+      setEmail('');
       setMessage('');
       setIsConsentAgreed(false);
       setTimeout(() => setStatus('idle'), 5000);
@@ -73,6 +78,14 @@ const ContactPage: React.FC = () => {
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
   };
 
   return (
@@ -91,15 +104,41 @@ const ContactPage: React.FC = () => {
                   <label htmlFor="name" className="text-base font-medium text-gray-200">ФИО</label>
                   <div className="relative">
                     <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
-                    <input type="text" name="name" id="name" required className="block w-full rounded-lg border border-white/20 bg-transparent pl-11 pr-4 py-3 text-lg text-white placeholder-gray-400 transition-colors focus:border-sky-400 focus:ring-2 focus:ring-sky-400/50" placeholder="Иванов Иван Иванович" />
+                    <input 
+                      type="text" 
+                      name="name" 
+                      id="name" 
+                      required 
+                      value={name}
+                      onChange={handleNameChange}
+                      maxLength={maxLengthNameEmail}
+                      className="block w-full rounded-lg border border-white/20 bg-transparent pl-11 pr-4 py-3 text-lg text-white placeholder-gray-400 transition-colors focus:border-sky-400 focus:ring-2 focus:ring-sky-400/50" 
+                      placeholder="Иванов Иван Иванович" 
+                    />
                   </div>
+                  {name.length > maxLengthNameEmail && (
+                    <p className="text-red-400 text-sm">Имя превышает максимальную длину в {maxLengthNameEmail} символов</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="email" className="text-base font-medium text-gray-200">Электронная почта</label>
                   <div className="relative">
                     <MailIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
-                    <input type="email" name="email" id="email" required className="block w-full rounded-lg border border-white/20 bg-transparent pl-11 pr-4 py-3 text-lg text-white placeholder-gray-400 transition-colors focus:border-sky-400 focus:ring-2 focus:ring-sky-400/50" placeholder="ivan@mail.ru" />
+                    <input 
+                      type="email" 
+                      name="email" 
+                      id="email" 
+                      required 
+                      value={email}
+                      onChange={handleEmailChange}
+                      maxLength={maxLengthNameEmail}
+                      className="block w-full rounded-lg border border-white/20 bg-transparent pl-11 pr-4 py-3 text-lg text-white placeholder-gray-400 transition-colors focus:border-sky-400 focus:ring-2 focus:ring-sky-400/50" 
+                      placeholder="ivan@mail.ru" 
+                    />
                   </div>
+                  {email.length > maxLengthNameEmail && (
+                    <p className="text-red-400 text-sm">Электронная почта превышает максимальную длину в {maxLengthNameEmail} символов</p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="message" className="text-base font-medium text-gray-200">Ваше обращение</label>
@@ -112,15 +151,15 @@ const ContactPage: React.FC = () => {
                       required 
                       value={message}
                       onChange={handleMessageChange}
-                      maxLength={maxLength}
+                      maxLength={maxLengthMessage}
                       className="block w-full rounded-lg border border-white/20 bg-transparent pl-11 pr-4 py-3 text-lg text-white placeholder-gray-400 transition-colors focus:border-sky-400 focus:ring-2 focus:ring-sky-400/50" 
                       placeholder="Опишите ваш вопрос или предложение..."
                     ></textarea>
                   </div>
-                  {message.length > maxLength && (
-                    <p className="text-red-400 text-sm">Сообщение превышает максимальную длину в {maxLength} символов</p>
+                  {message.length > maxLengthMessage && (
+                    <p className="text-red-400 text-sm">Сообщение превышает максимальную длину в {maxLengthMessage} символов</p>
                   )}
-                  <p className="text-gray-400 text-sm">Символов: {message.length}/{maxLength}</p>
+                  <p className="text-gray-400 text-sm">Символов: {message.length}/{maxLengthMessage}</p>
                 </div>
                 
                 <div className="space-y-4 pt-2">
@@ -144,7 +183,7 @@ const ContactPage: React.FC = () => {
                 <div>
                   <button 
                     type="submit" 
-                    disabled={status === 'submitting' || !isConsentAgreed || message.length > maxLength} 
+                    disabled={status === 'submitting' || !isConsentAgreed || message.length > maxLengthMessage || name.length > maxLengthNameEmail || email.length > maxLengthNameEmail} 
                     className="w-full flex justify-center py-4 px-4 border border-transparent rounded-lg text-lg font-semibold text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-400 disabled:bg-gray-600 disabled:cursor-not-allowed transition-all duration-300"
                   >
                     {status === 'submitting' ? 'Отправка...' : 'Отправить обращение'}
