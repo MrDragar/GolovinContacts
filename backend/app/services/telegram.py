@@ -4,6 +4,8 @@ from aiogram.enums import ParseMode
 from datetime import datetime
 from typing import List
 
+from . import database
+
 async def get_bot_generator(token) -> Bot:
     async with Bot(
         token=token,
