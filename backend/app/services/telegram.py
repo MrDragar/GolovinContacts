@@ -3,6 +3,7 @@ from datetime import datetime
 from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from aiogram.utils.markdown import escape_md
 
 from . import database
 
@@ -41,4 +42,4 @@ class TelegramService:
 Текст обращения:
 {message} 
         """
-        await self._bot.send_message(chat_id=self._chat_id, text=text)
+        await self._bot.send_message(chat_id=self._chat_id, text=escape_md(text))
