@@ -159,7 +159,6 @@ const ContactPage: React.FC = () => {
                   {message.length > maxLengthMessage && (
                     <p className="text-red-400 text-sm">Сообщение превышает максимальную длину в {maxLengthMessage} символов</p>
                   )}
-                  <p className="text-gray-400 text-sm">Символов: {message.length}/{maxLengthMessage}</p>
                 </div>
                 
                 <div className="space-y-4 pt-2">
